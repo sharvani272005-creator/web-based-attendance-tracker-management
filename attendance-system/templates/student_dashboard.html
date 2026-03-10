@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='student_dashboard.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Student Dashboard</h1>
+    <a href="/logout" class="logout-btn-top">Logout</a>
+<br><br><br>
+    <!-- Profile Section -->
+    <div class="profile">
+        {% if student["photo"] %}
+            <img src="{{ url_for('static', filename='uploads/' + student['photo']) }}">
+        {% endif %}
+
+        <div class="profile-info">
+            <h2>{{ student["full_name"] }}</h2>
+            <div class="percentage">
+                Attendance Percentage: {{ percentage }}%
+<div class="status-box">
+    <strong>Status: {{ status }}</strong>
+</div>
+
+
+
+<div style="margin-top:10px; font-size:14px; color:#555;">
+    {{ warning }}
+</div>
+            </div>
+        </div>
+    </div>
+<form method="GET">
+    <label>Select Month:</label>
+    <input type="month" name="month" value="{{ selected_month }}">
+    <button type="submit">Filter</button>
+</form>
+    <hr>
+
+    <h3>Attendance Records</h3>
+    <div style="width:300px; margin-top:20px;">
+    <canvas id="attendanceChart"></canvas>
+</div>
+
+<script>
+const ctx = document.getElementById('attendanceChart');
+
+new Chart(ctx, {
+    type: 'pie',
+    data: {
+        labels: ['Present', 'Absent', 'Late'],
+        datasets: [{
+            data: [{{ present }}, {{ absent }}, {{ late }}],
+            backgroundColor: ['#22c55e', '#ef4444', '#f59e0b']
+        }]
+    },
+    options: {
+        plugins: {
+            legend: {
+                position: 'bottom'
+            }
+        }
+    }
+});
+</script>
+<h2>Monthly Summary</h2>
+
+<table border="1">
+<tr>
+    <th>Month</th>
+    <th>Total Hours</th>
+    <th>Present</th>
+    <th>Absent</th>
+    <th>Late</th>
+    <th>Percentage</th>
+</tr>
+
+{% for m in month_data %}
+<tr>
+    <td>{{ m.month }}</td>
+    <td>{{ m.total }}</td>
+    <td>{{ m.present }}</td>
+    <td>{{ m.absent }}</td>
+    <td>{{ m.late }}</td>
+    <td>{{ m.percentage }}%</td>
+</tr>
+{% endfor %}
+</table>
+
+<h2>Attendance List</h2>
+
+<table border="1">
+    <tr>
+        <th>Date</th>
+        <th>Period 1</th>
+        <th>Period 2</th>
+        <th>Period 3</th>
+        <th>Period 4</th>
+        <th>Period 5</th>
+        <th>Total</th>
+        <th>Absent</th>
+        <th>Present</th>
+        <th>Late</th>
+    </tr>
+
+    {% for row in table_data %}
+    <tr>
+        <td>{{ row.date }}</td>
+        <td>{{ row.P1 }}</td>
+        <td>{{ row.P2 }}</td>
+        <td>{{ row.P3 }}</td>
+        <td>{{ row.P4 }}</td>
+        <td>{{ row.P5 }}</td>
+        <td>{{ row.total }}</td>
+        <td>{{ row.absent }}</td>
+        <td>{{ row.present }}</td>
+        <td>{{ row.late }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<style>.logout-btn-top {
+    padding: 8px 18px;
+    background: #dc2626;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: 0.3s;
+}
+
+.logout-btn-top:hover {
+    background: #b91c1c;
+}</style>
+</div>
+
+</body>
+</html>

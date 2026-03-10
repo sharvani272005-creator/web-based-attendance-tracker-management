@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Students | AttendEase</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='teacher_dashboard.css') }}">
+</head>
+<body>
+<style>/* General Layout */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    background-color: #f0f2f5;
+    color: #333;
+}
+
+.teacher-page {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Sidebar Styling */
+.sidebar {
+    width: 240px;
+    background-color: #fff;
+    border-right: 1px solid #ddd;
+    padding: 20px;
+    position: fixed;
+    height: 100%;
+}
+
+.logo {
+    color: #2563eb;
+    margin-bottom: 30px;
+}
+
+.sidebar nav a {
+    display: block;
+    padding: 12px 15px;
+    text-decoration: none;
+    color: #4b5563;
+    border-radius: 8px;
+    margin-bottom: 5px;
+    transition: 0.3s;
+}
+
+.sidebar nav a:hover, .sidebar nav a.active {
+    background-color: #2563eb;
+    color: white;
+}
+
+/* Main Content Area */
+.content {
+    margin-left: 280px; /* Offset for the fixed sidebar */
+    padding: 40px;
+    width: 100%;
+}
+
+.chart-box {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+/* Table Alignment Fixes */
+h2 {
+    margin-top: 40px;
+    color: #1f2937;
+    font-size: 1.5rem;
+    border-bottom: 2px solid #f3f4f6;
+    padding-bottom: 10px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+th {
+    text-align: left; /* Aligns headers to the left */
+    padding: 12px 15px;
+    font-weight: 600;
+    color: #6b7280;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+}
+
+td {
+    padding: 15px;
+    border-bottom: 1px solid #f3f4f6;
+    vertical-align: middle;
+    text-align: left; /* Ensures data aligns with headers */
+}
+
+/* Specific Column Adjustments */
+td img {
+    display: block;
+    object-fit: cover;
+    border: 2px solid #e5e7eb;
+}
+
+/* Hover effect for rows */
+tr:hover {
+    background-color: #f9fafb;
+}</style>
+
+<div class="teacher-page">
+
+    <aside class="sidebar">
+        <h2 class="logo">AttendEase</h2>
+
+        <nav>
+            <a href="/teacher/dashboard">Dashboard</a>
+            <a class="active" href="/teacher/students">Students</a>
+            <a href="/teacher/mark-attendance">Mark Attendance</a>
+            <a href="/teacher/reports">Reports</a>
+        </nav>
+    </aside>
+
+<main class="content">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h1>Students List</h1>
+    </div>
+
+    <div class="chart-box" style="margin-bottom: 20px; padding: 20px;">
+        <input type="text" id="studentSearch" placeholder="Search by name or username..." 
+               style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; outline: none; transition: border 0.3s;">
+    </div>
+
+    <div class="chart-box">
+        <div class="year-section">
+            <h2 class="year-title">First Year Students</h2>
+            <table>
+                <thead>
+                    <tr style="background:#f3f4f6;">
+                        <th>Photo</th>
+                        <th>Full Name</th>
+                        <th>Username</th>
+                    </tr>
+                </thead>
+                <tbody class="student-table-body">
+                    {% for student in year1_students %}
+                    <tr class="student-row">
+                        <td>
+                            {% if student['photo'] %}
+                            <img src="{{ url_for('static', filename='uploads/' + student['photo']) }}" style="width:50px;height:50px;border-radius:50%;">
+                            {% else %}
+                            <div style="width:50px;height:50px;border-radius:50%; background:#eee; display:flex; align-items:center; justify-content:center; font-size:10px; color:#999;">No Pix</div>
+                            {% endif %}
+                        </td>
+                        <td class="searchable-name">{{ student['full_name'] }}</td>
+                        <td class="searchable-user">{{ student['username'] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="year-section">
+            <h2 class="year-title">Second Year Students</h2>
+            <table>
+                <thead>
+                    <tr style="background:#f3f4f6;">
+                        <th>Photo</th>
+                        <th>Full Name</th>
+                        <th>Username</th>
+                    </tr>
+                </thead>
+                <tbody class="student-table-body">
+                    {% for student in year2_students %}
+                    <tr class="student-row">
+                        <td>
+                            {% if student['photo'] %}
+                            <img src="{{ url_for('static', filename='uploads/' + student['photo']) }}" style="width:50px;height:50px;border-radius:50%;">
+                            {% endif %}
+                        </td>
+                        <td class="searchable-name">{{ student['full_name'] }}</td>
+                        <td class="searchable-user">{{ student['username'] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="year-section">
+            <h2 class="year-title">Third Year Students</h2>
+            <table>
+                <thead>
+                    <tr style="background:#f3f4f6;">
+                        <th>Photo</th>
+                        <th>Full Name</th>
+                        <th>Username</th>
+                    </tr>
+                </thead>
+                <tbody class="student-table-body">
+                    {% for student in year3_students %}
+                    <tr class="student-row">
+                        <td>
+                            {% if student['photo'] %}
+                            <img src="{{ url_for('static', filename='uploads/' + student['photo']) }}" style="width:50px;height:50px;border-radius:50%;">
+                            {% endif %}
+                        </td>
+                        <td class="searchable-name">{{ student['full_name'] }}</td>
+                        <td class="searchable-user">{{ student['username'] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+
+<script>
+    document.getElementById('studentSearch').addEventListener('keyup', function() {
+        let filter = this.value.toLowerCase();
+        let rows = document.querySelectorAll('.student-row');
+        let sections = document.querySelectorAll('.year-section');
+
+        rows.forEach(row => {
+            let fullName = row.querySelector('.searchable-name').textContent.toLowerCase();
+            let username = row.querySelector('.searchable-user').textContent.toLowerCase();
+            
+            // Show row if search matches full name OR username
+            if (fullName.includes(filter) || username.includes(filter)) {
+                row.style.display = "";
+            } else {
+                row.style.display = "none";
+            }
+        });
+
+        // Sub-feature: Hide the "Year X Students" heading if all students in that year are hidden
+        sections.forEach(section => {
+            let visibleRows = section.querySelectorAll('.student-row[style=""]');
+            if (visibleRows.length === 0 && filter !== "") {
+                section.querySelector('.year-title').style.display = "none";
+            } else {
+                section.querySelector('.year-title').style.display = "";
+            }
+        });
+    });
+</script>
+
+</div>
+
+</body>
+</html>

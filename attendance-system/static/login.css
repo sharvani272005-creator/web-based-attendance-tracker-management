@@ -1,0 +1,99 @@
+.login-page {
+    display: flex;
+    height: 100vh;
+    font-family: "Segoe UI", sans-serif;
+    background: #f5f7fb;
+}
+
+.login-page .login-left {
+    flex: 1;
+    background: #2563eb;
+    color: white;
+    padding: 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.login-page .login-left h1 {
+    font-size: 42px;
+    margin-bottom: 20px;
+}
+
+.login-page .login-left p {
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+.login-page .login-right {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-page .login-card {
+    background: white;
+    padding: 40px;
+    width: 360px;
+    border-radius: 14px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+}
+
+.login-page .subtext {
+    color: #6b7280;
+    margin-bottom: 20px;
+}
+
+.login-page .role-tabs {
+    display: flex;
+    background: #f1f5f9;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.login-page .role-btn {
+    flex: 1;
+    border: none;
+    background: none;
+    padding: 10px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.login-page .role-btn.active {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 0 5px rgba(0,0,0,0.1);
+}
+
+.login-page label {
+    font-size: 14px;
+    display: block;
+    margin-top: 10px;
+}
+
+.login-page input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 12px;
+    border-radius: 6px;
+    border: 1px solid #cbd5f5;
+}
+
+.login-page .login-btn {
+    width: 100%;
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.login-page .error {
+    color: red;
+    margin-bottom: 10px;
+}

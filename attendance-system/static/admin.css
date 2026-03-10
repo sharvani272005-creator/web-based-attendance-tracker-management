@@ -1,0 +1,99 @@
+/* ========== GLOBAL RESET (ADMIN ONLY) ========== */
+body {
+    margin: 100px;
+    padding: 0;
+    background: #f5f7fb;
+    font-family: "Segoe UI", sans-serif;
+}
+.dashboard-container{
+  padding: 20px;
+}
+
+/* ========== MAIN CONTAINER ========== */
+.admin-container {
+    width: 85%;
+    margin: 100px auto;
+    background: #ffffff;
+    padding: 30px 40px;
+    border-radius: 14px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+}
+
+/* ========== HEADINGS ========== */
+.admin-container h1 {
+    color: #2563eb;
+    margin-bottom: 5px;
+}
+
+.admin-container p {
+    color: #6b7280;
+    margin-bottom: 10px;
+}
+
+/* ========== BUTTON ========== */
+.primary-btn {
+    background: #2563eb;
+    color: #ffffff;
+    border: none;
+    padding: 12px 22px;
+    border-radius: 8px;
+    font-size: 15px;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+.primary-btn:hover {
+    background: #1e40af;
+}
+
+/* ========== SEARCH BAR ========== */
+#searchInput {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #cbd5f5;
+    margin-bottom: 30px;
+    font-size: 14px;
+}
+
+/* ========== SECTION HEADINGS ========== */
+.admin-container h2 {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    color: #111827;
+}
+
+/* ========== TABLE STYLING ========== */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 30px;
+    background: #ffffff;
+}
+
+th {
+    background: #2563eb;
+    color: white;
+    padding: 12px;
+    font-weight: 600;
+}
+
+td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+
+
+
+/* ========== SUCCESS / ERROR MESSAGES ========== */
+.success {
+    color: #16a34a;
+    margin-top: 10px;
+}
+
+.error {
+    color: #dc2626;
+    margin-top: 10px;
+}

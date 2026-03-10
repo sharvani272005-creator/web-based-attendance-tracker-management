@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Reports | AttendEase</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='teacher_dashboard.css') }}">
+</head>
+<body>
+
+<div class="teacher-page">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <h2 class="logo">AttendEase</h2>
+
+        <nav>
+            <a href="/teacher/dashboard">Dashboard</a>
+            <a href="/teacher/students">Students</a>
+            <a href="/teacher/mark-attendance">Mark Attendance</a>
+            <a class="active" href="/teacher/reports">Reports</a>
+        </nav>
+    </aside>
+
+    <!-- MAIN -->
+<main class="content">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h1>Year-wise Attendance Analytics</h1>
+        <button onclick="downloadCSV()" style="background-color: #10b981; color: white; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+            Export to Excel (CSV)
+        </button>
+    </div>
+
+    <div class="chart-box" style="margin-bottom: 20px;">
+        <input type="text" id="studentSearch" placeholder="Search for a student name..." 
+               style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px;">
+    </div>
+
+    {% for year, data in year_data.items() %}
+    <div class="chart-box year-container">
+        <h2>Year: {{ year }}</h2>
+        
+        <table class="attendance-table" id="table-{{ year }}" style="width:100%; margin-top:10px; border-collapse: collapse; text-align: left;">
+            <thead>
+                <tr style="background: #f3f4f6;">
+                    <th style="padding: 10px; border: 1px solid #ddd;">Student</th>
+                    <th style="padding: 10px; border: 1px solid #ddd;">Attendance %</th>
+                    <th style="padding: 10px; border: 1px solid #ddd;">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for s in data.students %}
+                <tr class="student-row">
+                    <td class="student-name" style="padding: 10px; border: 1px solid #ddd;">{{ s.name }}</td>
+                    <td style="padding: 10px; border: 1px solid #ddd;">{{ s.percentage }}%</td>
+                    <td class="student-status" style="padding: 10px; border: 1px solid #ddd; font-weight: bold;">
+                        {% if s.percentage >= 75 %}
+                            <span style="color: #10b981;">Eligible</span>
+                        {% elif s.percentage >= 65 %}
+                            <span style="color: #f59e0b;">Condoned</span>
+                        {% elif s.percentage >= 50 %}
+                            <span style="color: #3b82f6;">Withheld</span>
+                        {% else %}
+                            <span style="color: #ef4444;">Detained</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endfor %}
+</main>
+
+<script>
+    // 1. SEARCH FILTER LOGIC
+    document.getElementById('studentSearch').addEventListener('keyup', function() {
+        let filter = this.value.toLowerCase();
+        let rows = document.querySelectorAll('.student-row');
+
+        rows.forEach(row => {
+            let name = row.querySelector('.student-name').textContent.toLowerCase();
+            row.style.display = name.includes(filter) ? "" : "none";
+        });
+    });
+
+    // 2. CSV EXPORT LOGIC
+    function downloadCSV() {
+        let csv = ['Year,Student,Attendance %,Status']; // Headers
+        
+        // Grab all year containers
+        document.querySelectorAll('.year-container').forEach(container => {
+            let yearLabel = container.querySelector('h2').textContent.replace('Year: ', '');
+            let rows = container.querySelectorAll('.student-row');
+            
+            rows.forEach(row => {
+                // Only export rows that are currently visible (useful if filtered)
+                if (row.style.display !== "none") {
+                    let name = row.querySelector('.student-name').textContent;
+                    let percent = row.cells[1].textContent;
+                    let status = row.querySelector('.student-status').textContent.trim();
+                    
+                    csv.push(`${yearLabel},${name},${percent},${status}`);
+                }
+            });
+        });
+
+        // Create a blob and trigger download
+        let csvFile = new Blob([csv.join('\n')], { type: 'text/csv' });
+        let downloadLink = document.createElement('a');
+        downloadLink.download = `Attendance_Report_${new Date().toLocaleDateString()}.csv`;
+        downloadLink.href = window.URL.createObjectURL(csvFile);
+        downloadLink.style.display = 'none';
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+    }
+</script>
+<main class="content">
+    <h1>Year-wise Attendance Analytics</h1>
+
+    {% for year, data in year_data.items() %}
+    <section class="year-section" style="margin-bottom: 50px; border-bottom: 2px solid #eee; padding-bottom: 30px;">
+        <h2 style="color: #3b82f6;">Academic Year: {{ year }}</h2>
+        
+        <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+            <div class="chart-box" style="flex: 2; min-width: 300px;">
+                <h3>Student Attendance %</h3>
+                <canvas id="bar-{{ year }}"></canvas>
+            </div>
+
+            <div class="chart-box" style="flex: 1; min-width: 250px;">
+                <h3>Year Distribution</h3>
+                <canvas id="pie-{{ year }}"></canvas>
+            </div>
+        </div>
+    </section>
+    {% endfor %}
+</main>
+
+<script>
+    // Loop through the data we passed from Flask using Jinja2 inside Javascript
+    {% for year, data in year_data.items() %}
+    
+    (function() {
+        // 1. Prepare Data
+        const names = [{% for s in data.students %}"{{ s.name }}",{% endfor %}];
+        const percentages = [{% for s in data.students %}{{ s.percentage }},{% endfor %}];
+
+        // 2. Render Bar Chart
+        new Chart(document.getElementById("bar-{{ year }}"), {
+            type: 'bar',
+            data: {
+                labels: names,
+                datasets: [{
+                    label: 'Attendance %',
+                    data: percentages,
+                    backgroundColor: '#3b82f6'
+                }]
+            },
+            options: {
+                scales: { y: { beginAtZero: true, max: 100 } },
+                responsive: true
+            }
+        });
+
+        // 3. Render Pie Chart
+        new Chart(document.getElementById("pie-{{ year }}"), {
+            type: 'pie',
+            data: {
+                labels: ['Present', 'Absent'],
+                datasets: [{
+                    data: [{{ data.present }}, {{ data.absent }}],
+                    backgroundColor: ['#10b981', '#ef4444']
+                }]
+            },
+            options: { responsive: true }
+        });
+    })();
+
+    {% endfor %}
+</script>
+
+</body>
+</html>

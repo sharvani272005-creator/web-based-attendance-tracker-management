@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Teacher</title>
+    <style>
+        /* Modern & Clean Form Styling */
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .form-container {
+            background: #ffffff;
+            padding: 30px 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #1a73e8;
+            margin-bottom: 25px;
+            font-weight: 500;
+        }
+
+        /* Input Fields */
+        input[type="text"],
+        input[type="password"],
+        input[type="file"] {
+            width: 100%;
+            padding: 12px;
+            margin-top: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #dadce0;
+            border-radius: 5px;
+            box-sizing: border-box; /* Ensures padding doesn't affect width */
+            font-size: 14px;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #1a73e8;
+            box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
+        }
+
+        label {
+            font-weight: 600;
+            font-size: 14px;
+            color: #5f6368;
+        }
+
+        /* Submit Button */
+        button {
+            width: 100%;
+            background-color: #1a73e8;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #1557b0;
+        }
+
+        /* Back Link */
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #5f6368;
+            font-size: 14px;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Error Message */
+        .error-msg {
+            background-color: #fdeded;
+            color: #d32f2f;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <h2>Create Teacher</h2>
+
+    {% if msg %}
+        <p class="error-msg">{{ msg }}</p>
+    {% endif %}
+
+    <form method="POST" enctype="multipart/form-data">
+
+        <label>Full Name</label>
+        <input type="text" name="full_name" placeholder="Enter full name" required>
+
+        <label>Username</label>
+        <input type="text" name="username" placeholder="Enter username" required>
+
+        <label>Password</label>
+        <input type="password" name="password" placeholder="Enter password" required>
+
+        <label>Upload Photo</label>
+        <input type="file" name="photo">
+
+        <button type="submit">Create User</button>
+    </form>
+
+    <a href="/admin" class="back-link">← Back to Dashboard</a>
+</div>
+
+</body>
+</html>

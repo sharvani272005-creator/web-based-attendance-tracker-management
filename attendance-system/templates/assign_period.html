@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Assign Period</title>
+    <style>
+        /* General Page Styling */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f9;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px;
+        }
+
+        h2 {
+            color: #004085;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        /* Form Container */
+        form {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 450px;
+            border-top: 5px solid #007bff;
+        }
+
+        /* Label and Input Styling */
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #495057;
+            font-size: 14px;
+        }
+
+        select {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 25px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            background-color: #fff;
+            font-size: 16px;
+            color: #495057;
+            box-sizing: border-box;
+        }
+
+        select:focus {
+            border-color: #80bdff;
+            outline: 0;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+        /* Button Container */
+        .button-container {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        /* Common Button Styles */
+        .btn-blue, .btn-outline {
+            flex: 1;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            border: 2px solid #007bff;
+            font-family: inherit;
+            text-decoration: none;
+        }
+
+        /* Assign Button (Solid Blue) */
+        .btn-blue {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .btn-blue:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+
+        /* Cancel Button (Outline Blue) */
+        .btn-outline {
+            background-color: #ffffff;
+            color: #007bff;
+        }
+
+        .btn-outline:hover {
+            background-color: #e7f1ff;
+            color: #0056b3;
+            border-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Assign Teacher to Period</h2>
+
+    <form method="POST">
+
+        <label>Teacher</label>
+        <select name="teacher" required>
+            <option value="" disabled selected>Select a teacher...</option>
+            {% for t in teachers %}
+            <option value="{{ t['username'] }}">{{ t['username'] }}</option>
+            {% endfor %}
+        </select>
+
+        <label>Year</label>
+        <select name="year" required>
+            <option value="1">1st Year</option>
+            <option value="2">2nd Year</option>
+            <option value="3">3rd Year</option>
+        </select>
+
+        <label>Period</label>
+        <select name="period" required>
+            <option value="1">Period 1</option>
+            <option value="2">Period 2</option>
+            <option value="3">Period 3</option>
+            <option value="4">Period 4</option>
+            <option value="5">Period 5</option>
+        </select>
+
+        <div class="button-container">
+            <button type="submit" class="btn-blue">Assign</button>
+            <button type="button" class="btn-outline" onclick="window.location.href='/admin'">Cancel</button>
+        </div>
+
+    </form>
+
+</body>
+</html>

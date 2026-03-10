@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mark Attendance</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='mark_attendance.css') }}">
+</head>
+<body>
+
+<form method="POST">
+
+    {% if error %}
+        <p style="color:red;font-weight:bold">{{ error }}</p>
+    {% endif %}
+    {% if success %}
+        <p style="color:green;font-weight:bold">{{ success }}</p>
+    {% endif %}
+
+    <div class="attendance-container">
+
+        <div class="left-panel">
+            <div class="date-picker">
+                <label><strong>Select Date:</strong></label>
+                <input type="date" name="date" value="{{ date }}" required>
+            </div>
+
+            <b><label>Select Period:</label></b>
+            <select name="period" required>
+                <option value="" disabled {% if not period %}selected{% endif %}>Choose Period</option>
+                {% for p in allowed_periods %}
+                <option value="{{ p }}" {% if p|string == period|string %}selected{% endif %}>Period {{ p }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit" name="action" value="show">Show</button>
+
+            <div class="card">
+                <h3>Quick Actions</h3>
+                <button type="button" class="quick-btn present-all"
+                        onclick="markAll('Present')">Mark All Present</button>
+                <button type="button" class="quick-btn absent-all"
+                        onclick="markAll('Absent')">Mark All Absent</button>
+            </div>
+
+            <div class="card">
+                <h3>Summary</h3>
+                <p>Marked <strong id="markedCount">0</strong> / {{ students|length }}</p>
+
+                <div class="summary-box">
+                    <div class="summary-item summary-present">
+                        <span id="presentCount">0</span><br>Present
+                    </div>
+                    <div class="summary-item summary-absent">
+                        <span id="absentCount">0</span><br>Absent
+                    </div>
+                </div>
+
+                <div class="back-btn-container">
+                    <a href="/teacher/dashboard" class="back-btn">← Back to Dashboard</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="right-panel">
+
+            <div class="page-header">
+                <h2>Attendance</h2>
+                <button type="submit" name="action" value="save">Save</button>
+            </div>
+
+            <div class="student-card">
+                {% for student in students %}
+                <div class="student-row">
+
+                    <div class="student-info">
+                        <h4>{{ student }}</h4>
+                        <span>Student</span>
+                    </div>
+
+                    <input type="hidden" name="{{ student }}" id="input_{{ student }}" class="attendance-input">
+
+                    <div class="status-buttons">
+                        <button type="button" class="status-btn present"
+                                onclick="setStatus('{{ student }}','Present',this)">Present</button>
+
+                        <button type="button" class="status-btn absent"
+                                onclick="setStatus('{{ student }}','Absent',this)">Absent</button>
+
+                        <button type="button" class="status-btn late"
+                                onclick="setStatus('{{ student }}','Late',this)">Late</button>
+                    </div>
+
+                </div>
+                {% endfor %}
+            </div>
+
+        </div>
+    </div>
+</form>
+
+<script>
+function setStatus(student, status, btn) {
+    // Set the value in the hidden input
+    document.getElementById("input_" + student).value = status;
+
+    // Reset opacity for all buttons in this specific row
+    let buttons = btn.parentElement.querySelectorAll(".status-btn");
+    buttons.forEach(b => b.style.opacity = "0.4");
+    
+    // Highlight the clicked button
+    btn.style.opacity = "1";
+
+    updateSummary();
+}
+
+function markAll(status) {
+    // Find all hidden inputs and all status buttons
+    let inputs = document.querySelectorAll(".attendance-input");
+    inputs.forEach(input => {
+        input.value = status;
+        
+        // Find the buttons in the same row as this input and update their opacity
+        let row = input.parentElement;
+        let buttons = row.querySelectorAll(".status-btn");
+        buttons.forEach(btn => {
+            if (btn.innerText.trim() === status) {
+                btn.style.opacity = "1";
+            } else {
+                btn.style.opacity = "0.4";
+            }
+        });
+    });
+    updateSummary();
+}
+
+function updateSummary() {
+    let present = 0, absent = 0, marked = 0;
+    let inputs = document.querySelectorAll(".attendance-input");
+
+    inputs.forEach(input => {
+        if (input.value) {
+            marked++;
+            if (input.value === "Present") present++;
+            if (input.value === "Absent") absent++;
+        }
+    });
+
+    document.getElementById("presentCount").innerText = present;
+    document.getElementById("absentCount").innerText = absent;
+    document.getElementById("markedCount").innerText = marked;
+}
+
+// Run summary on page load in case data is pre-filled
+window.onload = updateSummary;
+</script>
+
+</body>
+</html>

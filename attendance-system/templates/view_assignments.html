@@ -1,0 +1,104 @@
+<h2>Teacher Assignments</h2>
+<style>
+    /* General Page Styling */
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f4f7f9;
+        color: #333;
+        padding: 40px;
+    }
+
+    h2 {
+        color: #004085; /* Deep Blue */
+        border-bottom: 2px solid #004085;
+        padding-bottom: 10px;
+    }
+
+    /* Table Styling */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: #ffffff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        overflow: hidden; /* Ensures rounded corners work */
+        margin-bottom: 20px;
+    }
+
+    th {
+        background-color: #007bff; /* Primary Blue */
+        color: white;
+        text-align: left;
+        padding: 12px 15px;
+        text-transform: uppercase;
+        font-size: 14px;
+    }
+
+    td {
+        padding: 12px 15px;
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    /* Zebra Striping */
+    tr:nth-child(even) {
+        background-color: #f8f9fa;
+    }
+
+    /* Hover effect */
+    tr:hover {
+        background-color: #ebf5ff;
+    }
+
+    /* Link/Action Styling */
+    a {
+        text-decoration: none;
+        color: #007bff;
+        font-weight: 600;
+        transition: color 0.2s;
+    }
+
+    a:hover {
+        color: #0056b3;
+        text-decoration: underline;
+    }
+
+    .back-link {
+        display: inline-block;
+        margin-top: 20px;
+        padding: 8px 16px;
+        background-color: #6c757d;
+        color: white;
+        border-radius: 4px;
+    }
+
+    .back-link:hover {
+        background-color: #5a6268;
+        color: white;
+        text-decoration: none;
+    }
+</style>
+<table>
+    <thead>
+        <tr>
+            <th>Teacher</th>
+            <th>Year</th>
+            <th>Period</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for a in assignments %}
+        <tr>
+            <td>{{ a.teacher }}</td>
+            <td>{{ a.year }} Year</td>
+            <td>Period {{ a.period }}</td>
+            <td>
+                <a href="/admin/edit-assignment/{{ a.id }}">Edit</a> |
+                <a href="/admin/delete-assignment/{{ a.id }}">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<a href="/admin" class="back-link">Back</a>

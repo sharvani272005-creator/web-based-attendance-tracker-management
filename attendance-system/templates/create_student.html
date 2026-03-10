@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Student</title>
+    <style>
+        /* Modern & Clean Form Styling - Unified Theme */
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f0f2f5; /* Matches the Teacher form background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .form-container {
+            background: #ffffff;
+            padding: 30px 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #1a73e8;
+            margin-bottom: 25px;
+            font-weight: 500;
+        }
+
+        /* Input & Select Fields */
+        input[type="text"],
+        input[type="password"],
+        input[type="file"],
+        select {
+            width: 100%;
+            padding: 12px;
+            margin-top: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #dadce0;
+            border-radius: 5px;
+            box-sizing: border-box; 
+            font-size: 14px;
+            background-color: #fff;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #1a73e8;
+            box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
+        }
+
+        label {
+            font-weight: 600;
+            font-size: 14px;
+            color: #5f6368;
+            display: block;
+        }
+
+        /* Submit Button */
+        button {
+            width: 100%;
+            background-color: #1a73e8;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            margin-top: 5px;
+        }
+
+        button:hover {
+            background-color: #1557b0;
+        }
+
+        /* Back Link */
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #5f6368;
+            font-size: 14px;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Error/Success Message Style */
+        .msg {
+            background-color: #fdeded;
+            color: #d32f2f;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <h2>Create Student</h2>
+
+    {% if msg %}
+        <p class="msg">{{ msg }}</p>
+    {% endif %}
+
+    <form method="POST" enctype="multipart/form-data">
+
+        <label>Full Name</label>
+        <input type="text" name="full_name" placeholder="Enter student's name" required>
+
+        <label>Username</label>
+        <input type="text" name="username" placeholder="Assign a username" required>
+
+        <label>Password</label>
+        <input type="password" name="password" placeholder="Create a password" required>
+
+        <label>Year</label>
+        <select name="year" required>
+            <option value="" disabled selected>Select Academic Year</option>
+            <option value="1">1st Year</option>
+            <option value="2">2nd Year</option>
+            <option value="3">3rd Year</option>
+        </select>
+
+        <label>Upload Student Photo</label>
+        <input type="file" name="photo">
+
+        <button type="submit">Create Student</button>
+    </form>
+
+    <a href="/admin" class="back-link">← Back to Dashboard</a>
+</div>
+
+</body>
+</html>

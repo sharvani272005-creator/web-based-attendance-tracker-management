@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Past Attendance</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            padding: 20px;
+        }
+
+        /* --- Notification Toast --- */
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            animation: slideDown 0.5s ease-out;
+        }
+        .alert-success {
+            background-color: #d1f7e8;
+            color: #1a7f57;
+            border: 1px solid #34d399;
+        }
+        @keyframes slideDown {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* --- Layout --- */
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #3498db;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+        }
+        h2, h3 { margin: 0; color: #2c3e50; }
+        
+        form {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .year-section {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+
+        input[type="date"], input[type="number"] {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        /* --- Buttons --- */
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .btn-save-top { background-color: #27ae60; padding: 10px 25px; }
+
+        /* --- THE FIXED BACK BUTTON --- */
+        .back-btn-container {
+            margin-left: auto; /* Pushes the button to the far right of the form */
+        }
+
+        .back-btn {
+            display: inline-block;
+            background-color: #e9ecef; /* Light gray background */
+            color: #2c3e50;            /* Dark text color */
+            text-align: center;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 10px;       /* Smooth rounded corners */
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: background-color 0.2s;
+        }
+
+        .back-btn:hover {
+            background-color: #dee2e6;
+        }
+
+        /* --- Table Styles --- */
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th { text-align: left; font-size: 0.8rem; color: #7f8c8d; text-transform: uppercase; padding: 10px; border-bottom: 1px solid #eee; }
+        td { padding: 15px 10px; border-bottom: 1px solid #f1f1f1; }
+        .student-name { font-weight: 600; color: #2c3e50; text-transform: uppercase; }
+        
+        .attendance-options { display: flex; gap: 10px; justify-content: flex-end; }
+        .attendance-options input[type="radio"] { display: none; }
+        .pill {
+            display: inline-block;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            background-color: #f8f9fa;
+            color: #7f8c8d;
+            border: 1px solid #eee;
+        }
+        input[value="Present"]:checked + .pill { background-color: #d1f7e8; color: #1a7f57; }
+        input[value="Absent"]:checked + .pill { background-color: #ffdce0; color: #b91c1c; }
+        input[value="Late"]:checked + .pill { background-color: #fef3c7; color: #92400e; }
+    </style>
+</head>
+<body>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }}" id="flash-msg">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <div class="header-container">
+        <h2>Edit Past Attendance</h2>
+    </div>
+
+    <form method="POST">
+        <div>
+            <strong>Date:</strong> 
+            <input type="date" name="date" value="{{ date }}" required>
+        </div>
+        <div>
+            <strong>Period:</strong> 
+            <input type="number" name="period" value="{{ period }}" min="1" max="8" required>
+        </div>
+        
+        <button type="submit" name="load">Load Students</button>
+
+        <div class="back-btn-container">
+            <a href="/teacher/dashboard" class="back-btn">← Back to Dashboard</a>
+        </div>
+    </form>
+
+    {% if year1 or year2 or year3 %}
+    <form method="POST" style="display: block;"> <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h3 style="color: #7f8c8d;">Marking for: {{ date }} (P:{{ period }})</h3>
+            <button type="submit" name="save" class="btn-save-top">Save Changes</button>
+        </div>
+
+        <input type="hidden" name="date" value="{{ date }}">
+        <input type="hidden" name="period" value="{{ period }}">
+
+        {% macro student_row(student_list, title) %}
+            {% if student_list %}
+            <div class="year-section">
+                <h3>{{ title }}</h3>
+                <table>
+                    <thead><tr><th>Student</th><th style="text-align: right;">Status</th></tr></thead>
+                    <tbody>
+                        {% for student in student_list %}
+                        <tr>
+                            <td><span class="student-name">{{ student }}</span></td>
+                            <td>
+                                <div class="attendance-options">
+                                    <label><input type="radio" name="status_{{ student }}" value="Present" {% if attendance_data[student]=='Present' %} checked {% endif %}><span class="pill">Present</span></label>
+                                    <label><input type="radio" name="status_{{ student }}" value="Absent" {% if attendance_data[student]=='Absent' %} checked {% endif %}><span class="pill">Absent</span></label>
+                                    <label><input type="radio" name="status_{{ student }}" value="Late" {% if attendance_data[student]=='Late' %} checked {% endif %}><span class="pill">Late</span></label>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% endif %}
+        {% endmacro %}
+
+        {{ student_row(year1, "1st Year") }}
+        {{ student_row(year2, "2nd Year") }}
+        {{ student_row(year3, "3rd Year") }}
+    </form>
+    {% endif %}
+
+    <script>
+        setTimeout(function() {
+            var msg = document.getElementById('flash-msg');
+            if (msg) msg.style.display = 'none';
+        }, 3000);
+    </script>
+</body>
+</html>

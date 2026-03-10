@@ -1,0 +1,143 @@
+<h2>Edit Assignment</h2>
+
+<form method="POST">
+<style>/* Form Container Styling */
+form {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-width: 500px; /* Keeps the form from stretching too wide */
+    margin-top: 20px;
+    border-top: 4px solid #007bff; /* Blue accent bar at the top */
+}
+
+/* Label Styling */
+label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #495057;
+    font-size: 14px;
+}
+
+/* Input/Select Styling */
+select {
+    width: 100%;
+    padding: 10px 12px;
+    margin-bottom: 20px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    background-color: #fff;
+    font-size: 16px;
+    color: #495057;
+    appearance: none; /* Removes default OS styling for a cleaner look */
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 1em;
+}
+
+select:focus {
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Button Styling */
+button[type="submit"] {
+    width: 100%;
+    padding: 12px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+button[type="submit"]:active {
+    background-color: #004085;
+}
+/* Container to sit them side-by-side */
+.button-container {
+    display: flex;
+    gap: 15px; /* Space between the two buttons */
+    margin-top: 20px;
+}
+
+/* Common styles for BOTH buttons */
+.btn-blue, .btn-blue-outline {
+    flex: 1; /* Makes both buttons the exact same width */
+    padding: 12px;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
+    border: 2px solid #007bff; /* Same border thickness for both */
+    font-family: inherit;
+}
+
+/* Solid Blue Button (Update) */
+.btn-blue {
+    background-color: #007bff;
+    color: white;
+}
+
+.btn-blue:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+/* Outlined Blue Button (Cancel) */
+.btn-blue-outline {
+    background-color: #ffffff;
+    color: #007bff;
+}
+
+.btn-blue-outline:hover {
+    background-color: #e7f1ff; /* Light blue tint on hover */
+    color: #0056b3;
+    border-color: #0056b3;
+}</style>
+<label>Teacher</label>
+<select name="teacher">
+{% for t in teachers %}
+<option value="{{ t.username }}"
+{% if t.username == assignment.teacher %}selected{% endif %}>
+{{ t.username }}
+</option>
+{% endfor %}
+</select>
+
+<label>Year</label>
+<select name="year">
+<option value="1" {% if assignment.year == '1' %}selected{% endif %}>1</option>
+<option value="2" {% if assignment.year == '2' %}selected{% endif %}>2</option>
+<option value="3" {% if assignment.year == '3' %}selected{% endif %}>3</option>
+</select>
+
+<label>Period</label>
+<select name="period">
+{% for i in range(1,6) %}
+<option value="{{ i }}" {% if assignment.period == i %}selected{% endif %}>{{ i }}</option>
+{% endfor %}
+</select>
+
+<div class="button-container">
+    <button type="submit" class="btn-blue">Update</button>
+    
+    <button type="button" class="btn-blue-outline" onclick="window.location.href='/admin'">
+        Cancel
+    </button>
+</div>
+
+</form>
